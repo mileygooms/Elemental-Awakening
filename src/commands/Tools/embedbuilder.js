@@ -272,7 +272,6 @@ async function handleSetColor(selectInteraction, rootInteraction, state) {
                 new StringSelectMenuOptionBuilder()
                     .setLabel(c.label)
                     .setValue(c.value)
-                    .setEmoji(c.emoji)
                     .setDescription(c.value !== '__custom__' ? c.value : 'Enter your own #RRGGBB value'),
             ),
         );
