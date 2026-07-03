@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { createEmbed, errorEmbed, successEmbed, infoEmbed, warningEmbed } from '../../utils/embeds.js';
+import { createEmbed } from '../../utils/embeds.js';
 import { getEconomyData, getMaxBankCapacity } from '../../utils/economy.js';
 import { withErrorHandling, createError, ErrorTypes } from '../../utils/errorHandler.js';
 import { logger } from '../../utils/logger.js';
@@ -24,7 +24,7 @@ export default {
         const targetUser = userOption || interaction.user;
         const guildId = interaction.guildId;
 
-        logger.info(`[ECONOMY] Balance check - userOption: ${userOption?.id || 'null'}, targetUser: ${targetUser.id}, guildId: ${guildId}, isPrefix: ${!!interaction._commandStartTime}`);
+        logger.info(`[ECONOMY] Balance check - userOption: ${userOption?.id || 'null'}, targetUser: ${targetUser.id}, guildId: ${guildId}`);
 
         logger.debug(`[ECONOMY] Balance check for ${targetUser.id}`, { userId: targetUser.id, guildId });
 
@@ -37,8 +37,6 @@ export default {
         }
 
         const userData = await getEconomyData(client, guildId, targetUser.id);
-
-        logger.info(`[ECONOMY] Economy data retrieved - userData:`, userData);
 
         if (!userData) {
             throw createError(
@@ -53,35 +51,47 @@ export default {
 
         const wallet = typeof userData.wallet === 'number' ? userData.wallet : 0;
         const bank = typeof userData.bank === 'number' ? userData.bank : 0;
+        const eventGems = typeof userData.eventGems === 'number' ? userData.eventGems : 0;
 
-            const embed = createEmbed({
-                title: `${targetUser.username}'s Balance`,
-                description: `Here is the current financial status for ${targetUser.username}.`,
-            })
-                .addFields(
-                    {
-                        name: "💵 Cash",
-                        value: `$${wallet.toLocaleString()}`,
-                        inline: true,
-                    },
-                    {
-                        name: "🏦 Bank",
-                        value: `$${bank.toLocaleString()} / $${maxBank.toLocaleString()}`,
-                        inline: true,
-                    },
-                    {
-                        name: "💰 Total",
-                        value: `$${(wallet + bank).toLocaleString()}`,
-                        inline: true,
-                    }
-                )
-                .setFooter({
-                    text: `Requested by ${interaction.user.tag}`,
-                    iconURL: interaction.user.displayAvatarURL(),
-                });
+        const embed = createEmbed({
+            title: `${targetUser.username}'s Balance`,
+            description: `Here is the current financial status for ${targetUser.username}.`,
+        })
+            .addFields(
+                {
+                    name: "💵 Cash",
+                    value: `$${wallet.toLocaleString()}`,
+                    inline: true,
+                },
+                {
+                    name: "🏦 Bank",
+                    value: `$${bank.toLocaleString()} / $${maxBank.toLocaleString()}`,
+                    inline: true,
+                },
+                {
+                    name: "✨ Event Gems",
+                    value: `${eventGems.toLocaleString()}`,
+                    inline: true,
+                },
+                {
+                    name: "💰 Total",
+                    value: `$${(wallet + bank).toLocaleString()}`,
+                    inline: true,
+                }
+            )
+            .setFooter({
+                text: `Requested by ${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL(),
+            });
 
-            logger.info(`[ECONOMY] Balance retrieved`, { userId: targetUser.id, wallet, bank });
+        logger.info(`[ECONOMY] Balance retrieved`, {
+            userId: targetUser.id,
+            wallet,
+            bank,
+            eventGems
+        });
 
-            await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
+        await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
+
     }, { command: 'balance' })
 };
