@@ -19,8 +19,9 @@ export const DEFAULT_ECONOMY_DATA = {
     lastWithdraw: 0,
     inventory: {},
     upgrades: {},
-    cooldowns: {}
-    eventGems: 0,
+    cooldowns: {},
+
+    eventGems: 0
 };
 
 export const DEFAULT_GUILD_CONFIG = {
@@ -43,9 +44,9 @@ export const DEFAULT_GUILD_CONFIG = {
 };
 
 export const INTERACTION_TIMEOUTS = {
-    EXPIRE: 15 * 60 * 1000,  
-    DEFER_TIMEOUT: 3000,      
-    REPLY_TIMEOUT: 3000       
+    EXPIRE: 15 * 60 * 1000,
+    DEFER_TIMEOUT: 3000,
+    REPLY_TIMEOUT: 3000
 };
 
 export const STORAGE_LIMITS = {
