@@ -20,6 +20,7 @@ export const DEFAULT_ECONOMY_DATA = {
     inventory: {},
     upgrades: {},
     cooldowns: {}
+    eventGems: 0,
 };
 
 export const DEFAULT_GUILD_CONFIG = {
