@@ -9,23 +9,50 @@ export default {
         .setName('eventgems')
         .setDescription('Staff-only Event Gems control')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+
         .addSubcommand(s =>
             s.setName('add')
                 .setDescription('Add Event Gems')
-                .addUserOption(o => o.setName('user').setRequired(true))
-                .addIntegerOption(o => o.setName('amount').setRequired(true))
+                .addUserOption(o =>
+                    o.setName('user')
+                        .setDescription('User to receive gems')
+                        .setRequired(true)
+                )
+                .addIntegerOption(o =>
+                    o.setName('amount')
+                        .setDescription('Amount of gems to add')
+                        .setRequired(true)
+                )
         )
+
         .addSubcommand(s =>
             s.setName('remove')
                 .setDescription('Remove Event Gems')
-                .addUserOption(o => o.setName('user').setRequired(true))
-                .addIntegerOption(o => o.setName('amount').setRequired(true))
+                .addUserOption(o =>
+                    o.setName('user')
+                        .setDescription('User to remove gems from')
+                        .setRequired(true)
+                )
+                .addIntegerOption(o =>
+                    o.setName('amount')
+                        .setDescription('Amount of gems to remove')
+                        .setRequired(true)
+                )
         )
+
         .addSubcommand(s =>
             s.setName('set')
                 .setDescription('Set Event Gems')
-                .addUserOption(o => o.setName('user').setRequired(true))
-                .addIntegerOption(o => o.setName('amount').setRequired(true))
+                .addUserOption(o =>
+                    o.setName('user')
+                        .setDescription('User to set gems for')
+                        .setRequired(true)
+                )
+                .addIntegerOption(o =>
+                    o.setName('amount')
+                        .setDescription('New gem amount')
+                        .setRequired(true)
+                )
         ),
 
     execute: withErrorHandling(async (interaction, config, client) => {
@@ -46,9 +73,12 @@ export default {
 
         const embed = createEmbed({
             title: 'Event Gems Updated',
-            description: `${user.username} now has **${data.eventGems} Event Gems**`
+            description: `${user.username} now has **${data.eventGems.toLocaleString()} Event Gems**`
         });
 
-        await InteractionHelper.safeReply(interaction, { embeds: [embed], ephemeral: true });
+        await InteractionHelper.safeReply(interaction, {
+            embeds: [embed],
+            ephemeral: true
+        });
     }, { command: 'eventgems' })
 };
