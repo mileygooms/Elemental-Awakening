@@ -59,44 +59,57 @@ export async function loadCommands(client) {
     
     const uniqueCommandNames = new Set();
     
-    for (const filePath of commandFiles) {
-        try {
-            const normalizedPath = filePath.replace(/\\/g, '/');
-            
-            const commandName = path.basename(filePath, '.js');
-            const commandDir = path.dirname(filePath);
-            const category = path.basename(commandDir);
-            
-            const commandModule = await import(`file://${filePath}`);
-            const command = commandModule.default || commandModule;
-            
-            if (!command.data || !command.execute) {
-                logger.warn(`Command at ${filePath} is missing required "data" or "execute" property.`);
-                continue;
-            }
-            
-            command.category = category;
-            command.filePath = normalizedPath;
-            
-            const primaryCommandName = command.data.name;
-            
-            if (!uniqueCommandNames.has(primaryCommandName)) {
-                uniqueCommandNames.add(primaryCommandName);
-                
-                client.commands.set(primaryCommandName, command);
-            }
-            
-            const subcommands = getSubcommandInfo(command.data.toJSON());
-            
-            logger.info(`Loaded command: ${primaryCommandName} from ${normalizedPath} (category: ${category})`);
-            
-            if (subcommands.length > 0) {
-                logger.info(`  - Subcommands: ${subcommands.join(', ')}`);
-            }
-            
-        } catch (error) {
-            logger.error(`Error loading command from ${filePath}:`, error);
+for (const filePath of commandFiles) {
+    try {
+        const normalizedPath = filePath.replace(/\\/g, '/');
+
+        const commandName = path.basename(filePath, '.js');
+        const commandDir = path.dirname(filePath);
+        const category = path.basename(commandDir);
+
+        logger.info(`Attempting to load command: ${normalizedPath}`);
+
+        const commandModule = await import(`file://${filePath}`);
+        const command = commandModule.default || commandModule;
+
+        if (!command.data || !command.execute) {
+            logger.warn(`Command at ${filePath} is missing required "data" or "execute" property.`);
+            continue;
         }
+
+        logger.info(`Attempting to validate command: ${normalizedPath}`);
+
+        try {
+            command.data.toJSON();
+        } catch (err) {
+            logger.error(`BROKEN COMMAND FILE: ${normalizedPath}`);
+            logger.error(err);
+            continue;
+        }
+
+        command.category = category;
+        command.filePath = normalizedPath;
+
+        const primaryCommandName = command.data.name;
+
+        if (!uniqueCommandNames.has(primaryCommandName)) {
+            uniqueCommandNames.add(primaryCommandName);
+
+            client.commands.set(primaryCommandName, command);
+        }
+
+        const subcommands = getSubcommandInfo(command.data.toJSON());
+
+        logger.info(`Loaded command: ${primaryCommandName} from ${normalizedPath} (category: ${category})`);
+
+        if (subcommands.length > 0) {
+            logger.info(`  - Subcommands: ${subcommands.join(', ')}`);
+        }
+
+    } catch (error) {
+        logger.error(`Error loading command from ${filePath}:`, error);
+    }
+}
     }
     
     const commandsWithSubcommands = Array.from(client.commands.values()).filter(cmd => {
