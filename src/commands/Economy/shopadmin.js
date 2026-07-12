@@ -17,14 +17,29 @@ export default {
             sub
                 .setName('add')
                 .setDescription('Add item')
-                .addStringOption(o =>
-                    o.setName('id').setRequired(true))
-                .addStringOption(o =>
-                    o.setName('name').setRequired(true))
-                .addIntegerOption(o =>
-                    o.setName('price').setRequired(true))
-                .addStringOption(o =>
-                    o.setName('description').setRequired(true))
+.addStringOption(o =>
+    o
+        .setName('id')
+        .setDescription('Item ID')
+        .setRequired(true))
+
+.addStringOption(o =>
+    o
+        .setName('name')
+        .setDescription('Item name')
+        .setRequired(true))
+
+.addIntegerOption(o =>
+    o
+        .setName('price')
+        .setDescription('Item price')
+        .setRequired(true))
+
+.addStringOption(o =>
+    o
+        .setName('description')
+        .setDescription('Item description')
+        .setRequired(true))
         )
 
         .addSubcommand(sub =>
