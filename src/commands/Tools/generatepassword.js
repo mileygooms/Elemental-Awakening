@@ -43,15 +43,15 @@ export default {
 
         try {
             const length = interaction.options.getInteger('length') || 16;
-                const includeUppercase = interaction.options.getBoolean('uppercase') ?? true;
-                const includeNumbers = interaction.options.getBoolean('numbers') ?? true;
-                const includeSymbols = interaction.options.getBoolean('symbols') ?? true;
-                
-                if (length < 8 || length > 50) {
-                    await replyUserError(interaction, { type: ErrorTypes.VALIDATION, message: '\'Password must be 8-50 characters. You provided:\' + length' });
-                    return;
-                }
+            const includeUppercase = interaction.options.getBoolean('uppercase') ?? true;
+            const includeNumbers = interaction.options.getBoolean('numbers') ?? true;
+            const includeSymbols = interaction.options.getBoolean('symbols') ?? true;
             
+            if (length < 8 || length > 50) {
+                await replyUserError(interaction, { type: ErrorTypes.VALIDATION, message: `Password must be 8-50 characters. You provided: ${length}` });
+                return;
+            }
+        
             const lowercase = 'abcdefghijklmnopqrstuvwxyz';
             const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             const numbers = '0123456789';
@@ -91,7 +91,7 @@ export default {
             
             let strength = 'Weak';
             let strengthEmoji = '🔴';
-let strengthColor = getColor('error');
+            let strengthColor = getColor('error');
             
             const hasLower = /[a-z]/.test(password);
             const hasUpper = /[A-Z]/.test(password);
@@ -116,19 +116,19 @@ let strengthColor = getColor('error');
             if (score > 80) {
                 strength = 'Very Strong';
                 strengthEmoji = '🟢';
-strengthColor = getColor('success');
+                strengthColor = getColor('success');
             } else if (score > 60) {
                 strength = 'Strong';
                 strengthEmoji = '🟢';
-strengthColor = getColor('success');
+                strengthColor = getColor('success');
             } else if (score > 40) {
                 strength = 'Good';
                 strengthEmoji = '🟡';
-strengthColor = getColor('warning');
+                strengthColor = getColor('warning');
             } else if (score > 20) {
                 strength = 'Weak';
                 strengthEmoji = '🟠';
-strengthColor = getColor('warning');
+                strengthColor = getColor('warning');
             }
             
             const embed = successEmbed(
