@@ -28,16 +28,16 @@ export default {
 
       if (challenger.id === opponent.id) {
         const embed = warningEmbed(
-          `**${challenger.username}**, you can't fight yourself! That's a draw before it even starts.`,
-          "⚔️ Invalid Challenge"
+          "⚔️ Invalid Challenge",
+          `**${challenger.username}**, you can't fight yourself! That's a draw before it even starts.`
         );
         return await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
       }
 
       if (opponent.bot) {
         const embed = warningEmbed(
-          "You can't fight bots! Challenge a real person instead.",
-          "⚔️ Invalid Opponent"
+          "⚔️ Invalid Opponent",
+          "You can't fight bots! Challenge a real person instead."
         );
         return await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
       }
@@ -75,8 +75,8 @@ export default {
         : `${fullDescription.slice(0, EMBED_DESCRIPTION_LIMIT - 15)}\n\n...`;
 
       const embed = successEmbed(
-        description,
-        "🏆 Duel Complete!"
+        "🏆 Duel Complete!",
+        description
       );
 
       await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
