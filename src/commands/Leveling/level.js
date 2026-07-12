@@ -93,7 +93,7 @@ export default {
                 const xpCooldown = interaction.options.getInteger('xp_cooldown') ?? 60;
 
                 if (xpMin > xpMax) {
-                    return await replyUserError(interaction, { type: ErrorTypes.VALIDATION, message: 'Minimum XP (**${xpMin}**) cannot be greater than maximum XP (**${xpMax}**).' });
+                    return await replyUserError(interaction, { type: ErrorTypes.VALIDATION, message: `Minimum XP (**${xpMin}**) cannot be greater than maximum XP (**${xpMax}**).` });
                 }
 
                 if (!botHasPermission(channel, ['SendMessages', 'EmbedLinks'])) {
@@ -107,7 +107,7 @@ export default {
                 const existingConfig = await getLevelingConfig(client, interaction.guildId);
 
                 if (existingConfig.configured) {
-                    return await replyUserError(interaction, { type: ErrorTypes.UNKNOWN, message: 'The leveling system is already set up on this server (level-up notifications go to <#${existingConfig.levelUpChannel}>).\n\nUse \\`/level dashboard\\` to adjust any settings.' });
+                    return await replyUserError(interaction, { type: ErrorTypes.UNKNOWN, message: `The leveling system is already set up on this server (level-up notifications go to <#${existingConfig.levelUpChannel}>).` });
                 }
 
                 const newConfig = {
