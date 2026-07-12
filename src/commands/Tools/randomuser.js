@@ -37,7 +37,7 @@ export default {
             return;
         }
 
-try {
+        try {
             if (!interaction.guild) {
                 return replyUserError(interaction, {
                     type: ErrorTypes.VALIDATION,
@@ -84,10 +84,10 @@ try {
             const user = selectedMember.user;
             const joinDate = selectedMember.joinedAt;
             const roles = selectedMember.roles.cache
-.filter(role => role.id !== interaction.guild.id)
+                .filter(role => role.id !== interaction.guild.id)
                 .sort((a, b) => b.position - a.position)
                 .map(role => role.toString())
-.slice(0, 10);
+                .slice(0, 10);
             
             const embed = successEmbed(
                 '🎲 Random User Selected',
@@ -97,7 +97,7 @@ try {
             .addFields(
                 { name: 'Username', value: user.username, inline: true },
                 { name: 'Bot', value: user.bot ? 'Yes' : 'No', inline: true },
-                { name: `Roles (${roles.length})`, value: roles.length > 0 ? roles.slice(0, 5).join('') + (roles.length > 5 ? `+${roles.length - 5} more` : '') : 'No roles', inline: false }
+                { name: `Roles (${roles.length})`, value: roles.length > 0 ? roles.slice(0, 5).join(', ') + (roles.length > 5 ? `+${roles.length - 5} more` : '') : 'No roles', inline: false }
             )
             .setColor('primary');
             
@@ -117,7 +117,7 @@ try {
             });
             
             const filter = (i) => i.customId === `randomuser_${interaction.user.id}_again` && i.user.id === interaction.user.id;
-const collector = response.createMessageComponentCollector({ filter, time: 300000 });
+            const collector = response.createMessageComponentCollector({ filter, time: 300000 });
             
             collector.on('collect', async (i) => {
                 try {
@@ -163,7 +163,7 @@ const collector = response.createMessageComponentCollector({ filter, time: 30000
                     .addFields(
                         { name: 'Username', value: newUser.username, inline: true },
                         { name: 'Bot', value: newUser.bot ? 'Yes' : 'No', inline: true },
-                        { name: `Roles (${newRoles.length})`, value: newRoles.length > 0 ? newRoles.slice(0, 5).join('') + (newRoles.length > 5 ? `+${newRoles.length - 5} more` : '') : 'No roles', inline: false }
+                        { name: `Roles (${newRoles.length})`, value: newRoles.length > 0 ? newRoles.slice(0, 5).join(', ') + (newRoles.length > 5 ? `+${newRoles.length - 5} more` : '') : 'No roles', inline: false }
                     )
                     .setColor(newSelectedMember.displayHexColor || '#3498db');
                     
