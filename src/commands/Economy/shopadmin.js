@@ -17,29 +17,26 @@ export default {
             sub
                 .setName('add')
                 .setDescription('Add item')
-.addStringOption(o =>
-    o
-        .setName('id')
-        .setDescription('Item ID')
-        .setRequired(true))
-
-.addStringOption(o =>
-    o
-        .setName('name')
-        .setDescription('Item name')
-        .setRequired(true))
-
-.addIntegerOption(o =>
-    o
-        .setName('price')
-        .setDescription('Item price')
-        .setRequired(true))
-
-.addStringOption(o =>
-    o
-        .setName('description')
-        .setDescription('Item description')
-        .setRequired(true))
+                .addStringOption(o =>
+                    o
+                        .setName('id')
+                        .setDescription('Item ID')
+                        .setRequired(true))
+                .addStringOption(o =>
+                    o
+                        .setName('name')
+                        .setDescription('Item name')
+                        .setRequired(true))
+                .addIntegerOption(o =>
+                    o
+                        .setName('price')
+                        .setDescription('Item price')
+                        .setRequired(true))
+                .addStringOption(o =>
+                    o
+                        .setName('description')
+                        .setDescription('Item description')
+                        .setRequired(true))
         )
 
         .addSubcommand(sub =>
@@ -47,7 +44,10 @@ export default {
                 .setName('remove')
                 .setDescription('Remove item')
                 .addStringOption(o =>
-                    o.setName('id').setRequired(true))
+                    o
+                        .setName('id')
+                        .setDescription('Item ID')
+                        .setRequired(true))
         ),
 
     async execute(interaction) {
