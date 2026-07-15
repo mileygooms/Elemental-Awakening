@@ -8,7 +8,7 @@ import { withErrorHandling } from '../../utils/errorHandler.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('buy')
-        .setDescription('Buy an item from the shop')
+        .setDescription('Buy an item from the Event Gem shop')
         .addStringOption(option =>
             option
                 .setName('item')
@@ -35,7 +35,7 @@ export default {
 
         await interaction.respond(
             filtered.map(item => ({
-                name: `${item.name} ($${item.price.toLocaleString()})`,
+                name: `${item.name} (${item.price} Event Gems)`,
                 value: item.id
             }))
         );
@@ -61,15 +61,17 @@ export default {
             interaction.user.id
         );
 
+        data.eventGems = data.eventGems || 0;
+
         const totalCost = item.price * quantity;
 
-        if ((data.wallet || 0) < totalCost) {
+        if (data.eventGems < totalCost) {
             return InteractionHelper.safeEditReply(interaction, {
-                content: `❌ You need $${totalCost.toLocaleString()}`
+                content: `❌ You need ${totalCost.toLocaleString()} Event Gems.`
             });
         }
 
-        data.wallet -= totalCost;
+        data.eventGems -= totalCost;
 
         if (!data.inventory)
             data.inventory = {};
@@ -88,7 +90,7 @@ export default {
             title: 'Purchase Successful',
             description:
                 `Purchased **${quantity}x ${item.name}**\n` +
-                `Cost: **$${totalCost.toLocaleString()}**`
+                `Cost: **${totalCost.toLocaleString()} Event Gems**`
         });
 
         await InteractionHelper.safeEditReply(interaction, {
@@ -96,7 +98,7 @@ export default {
         });
 
         console.log(
-            `[SHOP PURCHASE] ${interaction.user.tag} bought ${quantity}x ${item.name} for $${totalCost}`
+            `[EVENT SHOP] ${interaction.user.tag} bought ${quantity}x ${item.name} for ${totalCost} Event Gems`
         );
     }, { command: 'buy' })
 };
