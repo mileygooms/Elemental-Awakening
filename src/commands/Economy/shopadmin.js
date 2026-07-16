@@ -3,7 +3,10 @@ import {
     PermissionFlagsBits
 } from 'discord.js';
 
-import { shopItems } from '../../config/shop/items.js';
+import {
+    getShopItems,
+    saveShopItems
+} from '../../utils/shopDatabase.js';
 
 export default {
     data: new SlashCommandBuilder()
@@ -50,10 +53,13 @@ export default {
                         .setRequired(true))
         ),
 
-    async execute(interaction) {
+    async execute(interaction, config, client) {
 
         const sub =
             interaction.options.getSubcommand();
+
+        const shopItems =
+            await getShopItems(client);
 
         if (sub === 'add') {
 
@@ -71,8 +77,7 @@ export default {
 
             if (shopItems.find(i => i.id === id)) {
                 return interaction.reply({
-                    content:
-                        '❌ Item already exists.',
+                    content: '❌ Item already exists.',
                     ephemeral: true
                 });
             }
@@ -85,9 +90,13 @@ export default {
                 type: 'custom'
             });
 
+            await saveShopItems(
+                client,
+                shopItems
+            );
+
             return interaction.reply({
-                content:
-                    `✅ Added ${name}`,
+                content: `✅ Added **${name}** to the shop.`,
                 ephemeral: true
             });
         }
@@ -104,17 +113,23 @@ export default {
 
             if (index === -1) {
                 return interaction.reply({
-                    content:
-                        '❌ Item not found.',
+                    content: '❌ Item not found.',
                     ephemeral: true
                 });
             }
 
+            const removed =
+                shopItems[index];
+
             shopItems.splice(index, 1);
 
+            await saveShopItems(
+                client,
+                shopItems
+            );
+
             return interaction.reply({
-                content:
-                    '✅ Item removed.',
+                content: `✅ Removed **${removed.name}** from the shop.`,
                 ephemeral: true
             });
         }
